@@ -1,23 +1,34 @@
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
-	static Banco banco;
+
+	static AutoAtendimento aa = new AutoAtendimentoImpl();
+
 	public static void main(String[] args) {
-		iniciarBanco();
+		Reader r = Reader.getInstance();
+		aa.iniciarAutoAtendimento(iniciarBanco());
+		Option option = null;
+		Scanner scanner = r.getScanner();
+		while (option == null || !option.equals(Option.SAIR)) {
+			System.out.println("Escolha uma opção:");
+			aa.exibirOpcoes();
+			option = r.obterOpcao();
+			if (option != null)
+				aa.processarOpcao(option);
+		}
+		
+		r.getScanner().close();
 	}
 
-	private static void iniciarBanco(){
-		banco = new Banco();
-		Scanner scanner = new Scanner(System.in);
+	private static Banco iniciarBanco() {
+		Reader r = Reader.getInstance();
+		Banco banco = new Banco();
 		System.out.println("Bem vindo!");
 		System.out.println("Vamos criar o banco. Qual nome deseja colocar? ");
-		banco.setNome(scanner.next());
-		System.out.println("Banco "+banco.getNome()+" criado");
-		Option option = Option.CRIAR_CONTA;
-		while (option.equals(Option.EXTRATO)) {
-			
-		}
-		scanner.close();
+		banco.setNome(r.getScanner().nextLine());
+		System.out.println("Bem vindo ao " + banco.getNome() + " ");
+		return banco;
 	}
 
 }

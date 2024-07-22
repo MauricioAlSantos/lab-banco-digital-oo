@@ -1,3 +1,7 @@
+import java.util.LinkedList;
+import java.util.List;
+
+import lombok.Getter;
 
 public abstract class Conta implements IConta {
 	
@@ -8,6 +12,9 @@ public abstract class Conta implements IConta {
 	protected int numero;
 	protected double saldo;
 	protected Cliente cliente;
+	
+	@Getter
+	protected List<Transacao> transacoes = new LinkedList<>();
 
 	public Conta(Cliente cliente) {
 		this.agencia = Conta.AGENCIA_PADRAO;
@@ -23,6 +30,11 @@ public abstract class Conta implements IConta {
 	@Override
 	public void depositar(double valor) {
 		saldo += valor;
+		Transacao t =  new Transacao();
+		t.setNumeroAgencia(agencia);
+		t.setNumeroConta(numero);
+		t.setTipoTransacao(TipoTransacao.DEPOSITO);
+		transacoes.add(t);
 	}
 
 	@Override
@@ -42,6 +54,7 @@ public abstract class Conta implements IConta {
 	public double getSaldo() {
 		return saldo;
 	}
+
 
 	protected void imprimirInfosComuns() {
 		System.out.println(String.format("Titular: %s", this.cliente.getNome()));
